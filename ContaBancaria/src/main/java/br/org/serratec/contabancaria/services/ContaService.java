@@ -26,6 +26,11 @@ public class ContaService {
 		cache.put(4250, new Conta(4250, "Luana", 3000.));
 	}
 
+	/**
+	 * TODO 
+	 * 		O retorno deve ser apenas a lista de objetos "Conta",
+	 * 		não duplicando a informação no número da conta.
+	 */
 	public Map<Integer, Conta> listarContas(){
 		return cache;
 	}
@@ -49,6 +54,7 @@ public class ContaService {
 	public Conta atualizarConta(Integer numAntigo, Conta conta) throws ContaInvalidaException, ContaNaoEncontradaException, ContaJaExisteException {
 		validarConta(numAntigo);
 		validarNumero(conta.getNumero());
+		//FIXME Não está permitindo alterar apenas o titular da conta quando o número da conta não é alterado.
 		if(numAntigo != conta.getNumero()) numeroExiste(conta.getNumero());		
 		Conta contaOld = cache.get(numAntigo);
 		cache.remove(numAntigo);
@@ -79,8 +85,10 @@ public class ContaService {
 		validarConta(numero);
 		Conta conta = cache.get(numero);		
 		if(conta == null) throw new ContaNaoEncontradaException(null);
+		//TODO Tipo de operação poderia ser um ENUM
 		switch(tipo.toLowerCase()) {
 			case "credito":
+				//TODO O limite poderia ser configurado em application.properties
 				if(!(valor > 50)) throw new DepositoInvalidoException(valor);
 				conta.setSaldo(conta.getSaldo() + valor);
 				break;
